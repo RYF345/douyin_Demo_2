@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 视频播放器 - 禁用默认控制器 -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:use_controller="false"
+        app:resize_mode="fixed_width"
+        app:surface_type="texture_view"/>
+
+    <!-- 自定义播放图标-->
+    <ImageView
+        android:id="@+id/iv_play_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_play"
+        android:visibility="gone"
+        android:alpha="0.8"/>
+
+    <!-- 右侧交互按钮 -->
+    <LinearLayout
+        android:id="@+id/btn_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:layout_gravity="bottom|end">
+
+        <!-- 头像、点赞、评论、分享、收藏按钮 -->
+        <ImageView
+            android:id="@+id/iv_like_full"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_like_fill"
+            app:tint="#FFFFFF"/>
+
+        <TextView
+            android:id="@+id/tv_like_count_full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="1.2w"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/iv_comment"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_comment"/>
+
+        <TextView
+            android:id="@+id/tv_comment_count_full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="1297"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/iv_star"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_star"
+            app:tint="#FFFFFF"/>
+        <TextView
+            android:id="@+id/tv_collect_count_full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="544"
+            android:textColor="#FFFFFF"/>
+
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_share"
+            app:tint="#FFFFFF"/>
+        <TextView
+            android:id="@+id/tv_share_count_full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="235"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
+    <!-- 底部视频信息 -->
+    <LinearLayout
+        android:id="@+id/layout_video_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_user_name_full"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="半只废柴"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="2dp"/>
+    <TextView
+        android:id="@+id/tv_title_full"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题"
+        android:textColor="#FAFAFA"
+        android:textSize="14sp"
+        android:layout_marginBottom="5dp"/>
+    </LinearLayout>
+
+    <!-- 作者头像 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_author_avatar_full_screen_video"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="bottom|end"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/CircleImage"
+        app:srcCompat="@drawable/ic_person"/>
+
+</FrameLayout>

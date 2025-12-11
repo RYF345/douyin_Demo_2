@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/iv_video_cover_recommend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_video_title_recommend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="这是一个测试标题这是一个测试标题"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/iv_video_cover_recommend" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_author_avatar_recommend"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/CircleImage"
+            app:srcCompat="@drawable/ic_person"
+            app:layout_constraintTop_toBottomOf="@id/tv_video_title_recommend"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_author_name_recommend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="用户小张"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_author_avatar_recommend"
+            app:layout_constraintEnd_toStartOf="@id/iv_like_icon_video_recommend"
+            app:layout_constraintTop_toBottomOf="@id/tv_video_title_recommend"
+            app:layout_constraintTop_toTopOf="@id/iv_author_avatar_recommend"
+            app:layout_constraintHorizontal_bias="0"/>
+
+        <ImageView
+            android:id="@+id/iv_like_icon_video_recommend"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_like"
+            app:layout_constraintRight_toLeftOf="@id/tv_like_count_recommend"
+            app:layout_constraintTop_toTopOf="@id/iv_author_avatar_recommend"
+            app:layout_constraintTop_toBottomOf="@id/tv_video_title_recommend"/>
+
+
+        <TextView
+            android:id="@+id/tv_like_count_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="1.2w"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_author_avatar_recommend"
+            app:layout_constraintTop_toBottomOf="@id/tv_video_title_recommend" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
