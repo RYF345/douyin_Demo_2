@@ -152,7 +152,10 @@ public class RecommendFragment extends Fragment {
                 if (navigationEvent != null) {
                     Intent intent = new Intent(requireContext(), VideoPlayActivity.class);
                     intent.putExtra("startPosition", navigationEvent.getPosition());
+                    intent.putExtra("coverResId", navigationEvent.getCoverResId());
                     startActivity(intent);
+                    // 禁用默认转场动画，使封面过渡更自然
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
             }
         });

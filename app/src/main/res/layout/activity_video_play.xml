@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
+    <!-- 封面占位图：用于转场动画，避免黑屏 -->
+    <ImageView
+        android:id="@+id/iv_cover_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:visibility="visible"/>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_full_video"
         android:layout_width="match_parent"

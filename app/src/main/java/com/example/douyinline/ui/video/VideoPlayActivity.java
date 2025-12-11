@@ -12,8 +12,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.douyinline.R;
 import com.example.douyinline.bean.VideoBean;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -30,9 +35,14 @@ public class VideoPlayActivity extends AppCompatActivity {
     private static final String TAG = "VideoPlayActivity";
     
     private VideoPlayViewModel viewModel;
+    private CommentViewModel commentViewModel;
     private ViewPager2 vpFullVideo;
     private VideoPlayerPagerAdapter adapter;
     private int currentPosition = 0;
+    
+    // 封面占位图（用于转场，避免黑屏）
+    private ImageView ivCoverPlaceholder;
+    private boolean isCoverHidden = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +54,17 @@ public class VideoPlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_play);
 
         int startPosition = getIntent().getIntExtra("startPosition", 0);
+        int coverResId = getIntent().getIntExtra("coverResId", 0);
         this.currentPosition = startPosition;
+
+        // 初始化封面占位图（避免转场黑屏）
+        initCoverPlaceholder(coverResId);
 
         // 初始化 ViewModel
         viewModel = new ViewModelProvider(this).get(VideoPlayViewModel.class);
         viewModel.initFromRepository(startPosition);
         viewModel.initPlayerPool(this);
+        commentViewModel = new ViewModelProvider(this).get(CommentViewModel.class);
 
         // 初始化 ViewPager2
         initViewPager(startPosition);
@@ -58,6 +73,45 @@ public class VideoPlayActivity extends AppCompatActivity {
         observeViewModel();
         
         android.util.Log.d(TAG, "onCreate: startPosition=" + startPosition);
+    }
+
+    /**
+     * 初始化封面占位图
+     * 在视频加载完成前显示封面，避免黑屏
+     */
+    private void initCoverPlaceholder(int coverResId) {
+        ivCoverPlaceholder = findViewById(R.id.iv_cover_placeholder);
+        if (coverResId != 0) {
+            // 使用 Glide 加载封面图
+            Glide.with(this)
+                    .load(coverResId)
+                    .into(ivCoverPlaceholder);
+            ivCoverPlaceholder.setVisibility(View.VISIBLE);
+        } else {
+            ivCoverPlaceholder.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 淡出封面占位图（视频准备好后调用）
+     */
+    public void hideCoverPlaceholder() {
+        if (isCoverHidden || ivCoverPlaceholder == null) {
+            return;
+        }
+        isCoverHidden = true;
+        
+        // 淡出动画
+        ivCoverPlaceholder.animate()
+                .alpha(0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        ivCoverPlaceholder.setVisibility(View.GONE);
+                    }
+                })
+                .start();
     }
 
     /**
@@ -92,7 +146,10 @@ public class VideoPlayActivity extends AppCompatActivity {
         adapter = new VideoPlayerPagerAdapter(viewModel.getPlayerPool(), videoList);
         vpFullVideo.setAdapter(adapter);
 
-        // 设置初始位置，不带动画
+        // 设置视频准备好的监听器（用于淡出封面占位图）
+        adapter.setOnVideoReadyListener(() -> hideCoverPlaceholder());
+
+        // 设置初始位置，不带滚动动画
         vpFullVideo.setCurrentItem(startPosition, false);
         
         // 初始播放位置（需要延迟一帧，确保 ViewHolder 已经 attached）
@@ -145,16 +202,14 @@ public class VideoPlayActivity extends AppCompatActivity {
                     VideoBean video = videoList.get(position);
                     // 显示评论BottomSheet
                     if (video != null) {
-                        CommentBottomSheetFragment commentSheet= CommentBottomSheetFragment.newInstance(video);
+                        CommentBottomSheetFragment commentSheet= CommentBottomSheetFragment.newInstance(video, position);
                         commentSheet.show(getSupportFragmentManager(), "commentSheet");
                     }else{
                         CommentBottomSheetFragment commentSheet= new CommentBottomSheetFragment();
                         android.util.Log.e(TAG, "onCommentClick: video is null");
                         commentSheet.show(getSupportFragmentManager(), "commentSheet");
                     }
-
                 }
-
             }
         });
     }
@@ -194,6 +249,21 @@ public class VideoPlayActivity extends AppCompatActivity {
                         holder.tvCollectCount.setText(formatCount(collectEvent.getCollectCount()));
                     }
                 }
+            }
+        });
+
+        // 观察评论事件
+        commentViewModel.getCommentCountToTal().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer count) {
+                int position = commentViewModel.getCurrentVideoPosition().getValue();
+                if (position > 0 && position < adapter.getItemCount()) {
+                    VideoPlayerPagerAdapter.VideoPlayerViewHolder holder = adapter.getViewHolder(position);
+                    if(holder != null){
+                        holder.tvCommentCount.setText(formatCount(count));
+                    }
+                }
+
             }
         });
     }

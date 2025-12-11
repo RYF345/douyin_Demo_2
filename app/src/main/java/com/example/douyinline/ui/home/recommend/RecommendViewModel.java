@@ -123,8 +123,8 @@ public class RecommendViewModel extends ViewModel {
      */
     public void onVideoCardClick(VideoBean video, int position) {
         if (video == null){ return;}
-        // 发送导航事件，包含视频的位置信息
-        navigateToVideoLiveData.setValue(new NavigationEvent(position));
+        // 发送导航事件，包含视频的位置信息和封面资源 ID（用于转场动画）
+        navigateToVideoLiveData.setValue(new NavigationEvent(position, video.getCoverResourceId()));
     }
 
     /**

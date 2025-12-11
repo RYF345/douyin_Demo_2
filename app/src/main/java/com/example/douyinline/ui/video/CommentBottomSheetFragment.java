@@ -36,21 +36,24 @@ public class CommentBottomSheetFragment extends BottomSheetDialogFragment {
     private TextView tvSendComment;
     private ProgressBar progressBar;
     private static final String ARG_VIDEO = "video";
+    private static final String ARG_POSITION = "position";
     private CommentViewModel commentViewModel;
     private VideoBean video;
     private boolean isLoading = false;
     private CommentSheetAdapter commentAdapter;
     private boolean hasMore = false;
+    private int videoPosition;
 
     /**
      * 创建实例
      * @param video 输入视频对象，确认评论来源
      * @return fragment
      */
-    public static CommentBottomSheetFragment newInstance(VideoBean video){
+    public static CommentBottomSheetFragment newInstance(VideoBean video, int position){
         CommentBottomSheetFragment fragment = new CommentBottomSheetFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_VIDEO, video);
+        args.putInt(ARG_POSITION, position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,9 +102,10 @@ public class CommentBottomSheetFragment extends BottomSheetDialogFragment {
         progressBar = view.findViewById(R.id.progress_loading_comment_sheet);
 
         progressBar.setVisibility(View.GONE);
-        commentViewModel = new ViewModelProvider(this).get(CommentViewModel.class);
+        commentViewModel = new ViewModelProvider(requireActivity()).get(CommentViewModel.class);
         if (getArguments() != null){
             video = (VideoBean) getArguments().getSerializable(ARG_VIDEO);
+            videoPosition = getArguments().getInt(ARG_POSITION);
             if (video != null){
                 tvCommentCount.setText(video.getCommentCount() + "条评论");
                 commentViewModel.setVideo(video);
@@ -121,7 +125,7 @@ public class CommentBottomSheetFragment extends BottomSheetDialogFragment {
 
         // 更新评论列表
         if (video != null){
-            loadComments(video);
+            loadComments(video, videoPosition);
         }
     }
 
@@ -195,7 +199,8 @@ public class CommentBottomSheetFragment extends BottomSheetDialogFragment {
      * 加载评论
      * @param video 视频对象
      */
-    private void loadComments(VideoBean video) {
+    private void loadComments(VideoBean video, int position) {
         commentViewModel.loadCommentsFirst(video);
+        commentViewModel.getCurrentVideoPosition().setValue(position);
     }
 }

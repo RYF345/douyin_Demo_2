@@ -1,0 +1,482 @@
+@startuml
+class com.example.douyinline.bean.CommentBean {
+- String commentContent
+- AuthorBean authorBean
+- String commentTime
+- int commentLikeCount
+- boolean isLiked
++ String getCommentContent()
++ void setCommentContent(String)
++ AuthorBean getAuthorBean()
++ void setAuthorBean(AuthorBean)
++ String getCommentTime()
++ void setCommentTime(String)
++ int getCommentLikeCount()
++ void setCommentLikeCount(int)
++ boolean isLiked()
++ void setLiked(boolean)
+}
+
+
+class com.example.douyinline.ui.home.HomeFragment {
+- TabLayout tabLayout
+- ViewPager2 viewPager2
+- HomeViewPagerAdapter homeViewPagerAdapter
+- TabLayoutMediator tabLayoutMediator
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.douyinline.ui.home.others.EmptyFragment {
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ {static} EmptyFragment newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+
+class com.example.douyinline.ui.home.HomeViewPagerAdapter {
+- List<Fragment> fragmentList
+- List<String> titleList
++ Fragment createFragment(int)
++ int getItemCount()
++ void addFragment(Fragment,String)
++ String getTitle(int)
+}
+
+
+class com.example.douyinline.ui.video.CommentSheetAdapter {
+- List<CommentBean> commentsList
++ CommentViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(CommentViewHolder,int)
++ int getItemCount()
++ void refreshData(List<CommentBean>)
++ void addCommentTop(CommentBean)
+}
+
+
+class com.example.douyinline.ui.video.CommentSheetAdapter$CommentViewHolder {
+- TextView tvUserName
+- TextView tvContent
+- TextView tvTime
+- TextView tvLikeCount
+- ImageView ivAvatar
+- ImageView ivLike
+}
+
+class com.example.douyinline.MainActivity {
+- TextView btnHomepage
+- HomeFragment homeFragment
+- FriendsFragment friendsFragment
+- MessageFragment messageFragment
+- MeFragment meFragment
+- Fragment currentFragment
+# void onCreate(Bundle)
+- void initFragment()
+- void initBottomNavigation()
+- void switchToFragment(int)
+- void updateBottomNavigation(int)
+}
+
+
+class com.example.douyinline.ui.me.MeFragment {
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ {static} MeFragment newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+
+class com.example.douyinline.ui.message.MessageFragment {
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ {static} MessageFragment newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+
+class com.example.douyinline.ui.home.recommend.RecommendViewModel {
+- VideoRepository videoRepository
+- MutableLiveData<List<VideoBean>> videoListLiveData
+- MutableLiveData<String> toastMessageLiveData
+- MutableLiveData<Boolean> refreshStatusLiveData
+- MutableLiveData<Boolean> loadMoreStatusLiveData
+- MutableLiveData<Boolean> hasMoreDataLiveData
+- MutableLiveData<String> errorStatusLiveData
+- MutableLiveData<NavigationEvent> navigateToVideoLiveData
++ MutableLiveData<List<VideoBean>> getVideoListLiveData()
++ MutableLiveData<String> getToastMessageLiveData()
++ MutableLiveData<Boolean> getRefreshStatusLiveData()
++ MutableLiveData<Boolean> getLoadMoreStatusLiveData()
++ MutableLiveData<Boolean> getHasMoreDataLiveData()
++ MutableLiveData<String> getErrorStatusLiveData()
++ MutableLiveData<NavigationEvent> getNavigateToVideoLiveData()
++ void loadRecommendVideos()
++ void onVideoCardClick(VideoBean,int)
++ void refreshRecommendVideos()
++ void loadMoreRecommendVideos()
+}
+
+
+class com.example.douyinline.ui.home.recommend.RecommendFragment {
+- VideoCardAdapter videoCardAdapter
+- RecyclerView recyclerView
+- RecommendViewModel viewModel
+- RefreshLayout refreshLayout
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void initRefreshLayout()
++ void initRecyclerView()
++ void observeViewModel()
+}
+
+
+class com.example.douyinline.bean.VideoBean {
+- int coverResourceId
+- int videoResourceId
+- String title
+- int likeCount
+- int commentCount
+- int shareCount
+- int collectCount
+- boolean isLiked
+- boolean isCollected
+- AuthorBean authorDetail
++ AuthorBean getAuthorDetail()
++ void setAuthorDetail(AuthorBean)
++ int getCoverResourceId()
++ void setCoverResourceId(int)
++ int getVideoResourceId()
++ void setVideoResourceId(int)
++ String getTitle()
++ void setTitle(String)
++ int getLikeCount()
++ void setLikeCount(int)
++ int getCommentCount()
++ void setCommentCount(int)
++ int getShareCount()
++ void setShareCount(int)
++ int getCollectCount()
++ void setCollectCount(int)
++ boolean isLiked()
++ void setLiked(boolean)
++ boolean isCollected()
++ void setCollected(boolean)
+}
+
+
+class com.example.douyinline.event.NavigationEvent {
+- int position
+- int coverResId
++ int getPosition()
++ int getCoverResId()
+}
+
+
+class com.example.douyinline.ui.video.CommentViewModel {
+- MutableLiveData<List<CommentBean>> commentListLiveData
+- MutableLiveData<Boolean> isLoading
+- VideoBean video
+- int ADD_COMMENT_COUNT
+- boolean hasMore
+- int hasLoaded
+- MutableLiveData<Integer> commentCountToTal
+- List<CommentBean> currentComments
+- MutableLiveData<Integer> currentVideoPosition
++ MutableLiveData<Boolean> getLoading()
++ MutableLiveData<List<CommentBean>> getCommentListLiveData()
++ MutableLiveData<Integer> getCommentCountToTal()
++ MutableLiveData<Integer> getCurrentVideoPosition()
++ void loadCommentsFirst(VideoBean)
++ void loadMoreComments()
++ void setVideo(VideoBean)
++ void sendComment(String)
+- List<CommentBean> generateComments(int)
+}
+
+
+class com.example.douyinline.ui.video.VideoPlayerPagerAdapter {
+- {static} String TAG
+- List<VideoBean> videoList
+- Context context
+- PlayerPool playerPool
+- int currentPlayingPosition
+- OnVideoReadyListener videoReadyListener
+- boolean hasNotifiedFirstVideoReady
+- OnInteractionListener interactionListener
+- Map<Integer,VideoPlayerViewHolder> attachedHolders
++ void setOnVideoReadyListener(OnVideoReadyListener)
++ void setOnInteractionListener(OnInteractionListener)
++ VideoPlayerViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(VideoPlayerViewHolder,int)
+- void bindVideoInfo(VideoPlayerViewHolder,VideoBean)
++ void updateLikeUI(VideoPlayerViewHolder,boolean)
++ void updateCollectUI(VideoPlayerViewHolder,boolean)
+- void setupGestureListener(VideoPlayerViewHolder)
+- void togglePlayPause(VideoPlayerViewHolder)
+- void setupInteractionListener(VideoPlayerViewHolder)
+- void showLikeAnimation(VideoPlayerViewHolder,float,float)
+- String formatNumber(int)
+- void notifyFirstVideoReady()
++ VideoPlayerViewHolder getViewHolder(int)
+- void prepareAndPlay(VideoPlayerViewHolder,int)
++ void onViewAttachedToWindow(VideoPlayerViewHolder)
++ void onViewDetachedFromWindow(VideoPlayerViewHolder)
+- void releasePlayerFromHolder(VideoPlayerViewHolder)
+- String getStateName(int)
++ void playAt(int)
++ void pauseCurrent()
++ void resumeCurrent()
++ int getItemCount()
++ void setVideoList(List<VideoBean>)
+}
+
+
+interface com.example.douyinline.ui.video.VideoPlayerPagerAdapter$OnInteractionListener {
+~ void onLikeClick(int)
+~ void onDoubleTapLike(int)
+~ void onCollectClick(int)
+~ void onShareClick(int)
+~ void onCommentClick(int)
+}
+
+interface com.example.douyinline.ui.video.VideoPlayerPagerAdapter$OnVideoReadyListener {
+~ void onFirstVideoReady()
+}
+
+class com.example.douyinline.ui.video.VideoPlayerPagerAdapter$VideoPlayerViewHolder {
+~ PlayerView playerView
+~ ImageView ivPlayIcon
+~ ImageView ivLike
+~ ImageView ivStar
+~ ImageView ivComment
+~ ImageView ivShare
+~ ImageView ivAuthorAvatar
+~ TextView tvUserName
+~ TextView tvLikeCount
+~ int boundPosition
+~ Player.Listener playerListener
+~ Animation avatarAnimation
+}
+
+class com.example.douyinline.ui.home.recommend.VideoCardAdapter {
+- Context context
+- List<VideoBean> videoList
+- OnItemClickListener listener
++ void setOnItemClickListener(OnItemClickListener)
++ void setVideoList(List<VideoBean>)
++ VideoCardViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(VideoCardViewHolder,int)
++ int getItemCount()
++ void onViewRecycled(VideoCardViewHolder)
+- void setCoverAspectRatio(VideoCardViewHolder,int)
+}
+
+
+interface com.example.douyinline.ui.home.recommend.VideoCardAdapter$OnItemClickListener {
+~ void onItemClick(VideoBean,int)
+}
+
+class com.example.douyinline.ui.home.recommend.VideoCardAdapter$VideoCardViewHolder {
+~ ImageView ivCover
+~ ImageView ivAuthorAvatar
+~ ImageView ivLikeIcon
+~ TextView tvTitle
+~ TextView tvAuthorName
+~ TextView tvLikeCount
+}
+
+class com.example.douyinline.ui.video.CommentBottomSheetFragment {
+- TextView tvCommentCount
+- RecyclerView rvCommentList
+- ImageView ivClose
+- EditText editComment
+- TextView tvSendComment
+- ProgressBar progressBar
+- {static} String ARG_VIDEO
+- {static} String ARG_POSITION
+- CommentViewModel commentViewModel
+- VideoBean video
+- boolean isLoading
+- CommentSheetAdapter commentAdapter
+- boolean hasMore
+- int videoPosition
++ {static} CommentBottomSheetFragment newInstance(VideoBean,int)
++ void onStart()
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void initListeners()
+- void initRecyclerView()
+- void observeViewModel()
+- void loadComments(VideoBean,int)
+}
+
+
+class com.example.douyinline.repository.VideoRepository {
+- List<VideoBean> videoList
+- {static} int[] VIDEO_POOL
+- {static} int[] AVATAR_POOL
+- {static} int[] COVER_POOL
+- {static} String[] TITLE_POOL
+- {static} String[] AUTHOR_POOL
+- {static} int INIT_VIDEO_COUNT
+- {static} VideoRepository INSTANCE
+- List<VideoBean> poolData
+- List<Integer> shuffleList
++ {static} VideoRepository getInstance()
+- void reshuffle()
++ List<VideoBean> getRecommendVideos()
++ List<VideoBean> refreshShuffle()
++ List<VideoBean> loadMoreShuffle()
++ {static} List<VideoBean> generateVideos()
+}
+
+
+class com.example.douyinline.ui.video.PlayerPool {
+- {static} String TAG
+- List<ExoPlayer> availablePlayers
+- List<ExoPlayer> allPlayers
+- Context appContext
+- Handler mainHandler
++ int MAX_PLAYERS
+- boolean isInitialized
++ void initPool()
+- ExoPlayer createPlayer()
++ ExoPlayer acquirePlayer()
++ void releasePlayer(ExoPlayer)
++ void resetPlayer(ExoPlayer)
++ int getAvailableCount()
++ int getTotalCount()
++ void releaseAllPlayers()
+}
+
+
+class com.example.douyinline.ui.video.VideoPlayViewModel {
+- MutableLiveData<List<VideoBean>> videoListLiveData
+- MutableLiveData<Integer> currentVideoPositionLiveData
+- MutableLiveData<LikeEvent> likeEventLiveData
+- MutableLiveData<CollectEvent> collectEventLiveData
+- PlayerPool playerPool
+- int currentIndex
+# void onCleared()
++ void initFromRepository(int)
++ void initPlayerPool(Context)
++ PlayerPool getPlayerPool()
++ void onPageSelected(int)
++ void toggleLikeClick(int)
++ void toggleCollectClick(int)
++ void onShareClick(VideoBean)
++ MutableLiveData<List<VideoBean>> getVideoListLiveData()
++ MutableLiveData<Integer> getCurrentVideoPositionLiveData()
++ MutableLiveData<LikeEvent> getLikeEventLiveData()
++ MutableLiveData<CollectEvent> getCollectEventLiveData()
+}
+
+
+class com.example.douyinline.ui.video.VideoPlayViewModel$LikeEvent {
+- int position
+- boolean isLiked
+- int likeCount
++ int getPosition()
++ boolean isLiked()
++ int getLikeCount()
+}
+
+
+class com.example.douyinline.ui.video.VideoPlayViewModel$CollectEvent {
+- int position
+- boolean isCollected
+- int collectCount
++ int getPosition()
++ boolean isCollected()
++ int getCollectCount()
+}
+
+
+class com.example.douyinline.bean.AuthorBean {
+- String authorName
+- int authorAvatar
++ int getAuthorAvatar()
++ void setAuthorAvatar(int)
++ String getAuthorName()
++ void setAuthorName(String)
+}
+
+
+class com.example.douyinline.ui.video.VideoPlayActivity {
+- {static} String TAG
+- VideoPlayViewModel viewModel
+- CommentViewModel commentViewModel
+- ViewPager2 vpFullVideo
+- VideoPlayerPagerAdapter adapter
+- int currentPosition
+- ImageView ivCoverPlaceholder
+- boolean isCoverHidden
+# void onCreate(Bundle)
+- void initCoverPlaceholder(int)
++ void hideCoverPlaceholder()
+- void setupFullScreen()
+- void initViewPager(int)
+- void observeViewModel()
+- String formatCount(int)
+# void onResume()
+# void onPause()
+# void onDestroy()
+}
+
+
+class com.example.douyinline.ui.friends.FriendsFragment {
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ {static} FriendsFragment newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+
+
+
+java.io.Serializable <|.. com.example.douyinline.bean.CommentBean
+androidx.fragment.app.Fragment <|-- com.example.douyinline.ui.home.HomeFragment
+androidx.fragment.app.Fragment <|-- com.example.douyinline.ui.home.others.EmptyFragment
+androidx.viewpager2.adapter.FragmentStateAdapter <|-- com.example.douyinline.ui.home.HomeViewPagerAdapter
+com.example.douyinline.ui.video.Adapter <|-- com.example.douyinline.ui.video.CommentSheetAdapter
+com.example.douyinline.ui.video.CommentSheetAdapter +.. com.example.douyinline.ui.video.CommentSheetAdapter$CommentViewHolder
+com.example.douyinline.ui.video.ViewHolder <|-- com.example.douyinline.ui.video.CommentSheetAdapter$CommentViewHolder
+androidx.appcompat.app.AppCompatActivity <|-- com.example.douyinline.MainActivity
+androidx.fragment.app.Fragment <|-- com.example.douyinline.ui.me.MeFragment
+androidx.fragment.app.Fragment <|-- com.example.douyinline.ui.message.MessageFragment
+androidx.lifecycle.ViewModel <|-- com.example.douyinline.ui.home.recommend.RecommendViewModel
+androidx.fragment.app.Fragment <|-- com.example.douyinline.ui.home.recommend.RecommendFragment
+java.io.Serializable <|.. com.example.douyinline.bean.VideoBean
+androidx.lifecycle.ViewModel <|-- com.example.douyinline.ui.video.CommentViewModel
+com.example.douyinline.ui.video.Adapter <|-- com.example.douyinline.ui.video.VideoPlayerPagerAdapter
+com.example.douyinline.ui.video.VideoPlayerPagerAdapter +.. com.example.douyinline.ui.video.VideoPlayerPagerAdapter$OnInteractionListener
+com.example.douyinline.ui.video.VideoPlayerPagerAdapter +.. com.example.douyinline.ui.video.VideoPlayerPagerAdapter$OnVideoReadyListener
+com.example.douyinline.ui.video.VideoPlayerPagerAdapter +.. com.example.douyinline.ui.video.VideoPlayerPagerAdapter$VideoPlayerViewHolder
+com.example.douyinline.ui.video.ViewHolder <|-- com.example.douyinline.ui.video.VideoPlayerPagerAdapter$VideoPlayerViewHolder
+com.example.douyinline.ui.home.recommend.Adapter <|-- com.example.douyinline.ui.home.recommend.VideoCardAdapter
+com.example.douyinline.ui.home.recommend.VideoCardAdapter +.. com.example.douyinline.ui.home.recommend.VideoCardAdapter$OnItemClickListener
+com.example.douyinline.ui.home.recommend.VideoCardAdapter +.. com.example.douyinline.ui.home.recommend.VideoCardAdapter$VideoCardViewHolder
+com.example.douyinline.ui.home.recommend.ViewHolder <|-- com.example.douyinline.ui.home.recommend.VideoCardAdapter$VideoCardViewHolder
+com.google.android.material.bottomsheet.BottomSheetDialogFragment <|-- com.example.douyinline.ui.video.CommentBottomSheetFragment
+androidx.lifecycle.ViewModel <|-- com.example.douyinline.ui.video.VideoPlayViewModel
+com.example.douyinline.ui.video.VideoPlayViewModel +.. com.example.douyinline.ui.video.VideoPlayViewModel$LikeEvent
+com.example.douyinline.ui.video.VideoPlayViewModel +.. com.example.douyinline.ui.video.VideoPlayViewModel$CollectEvent
+java.io.Serializable <|.. com.example.douyinline.bean.AuthorBean
+androidx.appcompat.app.AppCompatActivity <|-- com.example.douyinline.ui.video.VideoPlayActivity
+androidx.fragment.app.Fragment <|-- com.example.douyinline.ui.friends.FriendsFragment
+@enduml

@@ -20,20 +20,37 @@ public class CommentViewModel extends ViewModel {
     private final int ADD_COMMENT_COUNT = 10;
     private boolean hasMore = false;
     private int hasLoaded = 0;  // 已加载的评论数量
-    private int page = 1;
+    private MutableLiveData<Integer> commentCountToTal = new MutableLiveData<>(0);
 
-    private List<CommentBean> currentComments = new ArrayList<>();
+    private List<CommentBean> currentComments = new ArrayList<>(0);
+    private MutableLiveData<Integer> currentVideoPosition = new MutableLiveData<>(0);
 
     public MutableLiveData<Boolean> getLoading() {
         return isLoading;
     }
+
     /**
      * 获取评论列表LiveData
      * @return 评论列表LiveData
      */
-
     public MutableLiveData<List<CommentBean>> getCommentListLiveData() {
         return commentListLiveData;
+    }
+
+    /**
+     * 获取评论总数
+     * @return 评论总数
+     */
+    public MutableLiveData<Integer> getCommentCountToTal() {
+        return commentCountToTal;
+    }
+
+    /**
+     * 获取当前视频位置
+     * @return 当前视频位置
+     */
+    public MutableLiveData<Integer> getCurrentVideoPosition() {
+        return currentVideoPosition;
     }
 
     /**
@@ -44,6 +61,7 @@ public class CommentViewModel extends ViewModel {
         if (Boolean.TRUE.equals(isLoading.getValue())) {return;}
         
         // 模拟加载评论数据
+        getCommentCountToTal().setValue(video.getCommentCount());
         int shouldLoadCount = video.getCommentCount() - hasLoaded;
         if (shouldLoadCount <= 0) {
             hasMore = false;
@@ -86,9 +104,15 @@ public class CommentViewModel extends ViewModel {
     }
     /**
      * 设置当前视频
+     * 切换视频时需要重置评论相关状态
      */
     public void setVideo(VideoBean video) {
         this.video = video;
+        // 重置评论状态，防止不同视频共享同一份评论数据
+        this.currentComments.clear();
+        this.hasLoaded = 0;
+        this.hasMore = false;
+        this.commentListLiveData.setValue(new ArrayList<>());
     }
 
     /**
@@ -99,6 +123,7 @@ public class CommentViewModel extends ViewModel {
         if (content == null || content.isEmpty()) {
             return;
         }
+        getCommentCountToTal().setValue(getCommentCountToTal().getValue() + 1);
         // 获取当前评论列表
         List<CommentBean> comments = commentListLiveData.getValue();
 

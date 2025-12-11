@@ -58,6 +58,18 @@ public class VideoPlayerPagerAdapter extends RecyclerView.Adapter<VideoPlayerPag
         void onCommentClick(int position);
     }
 
+    // 视频准备好的回调接口（用于转场动画）
+    public interface OnVideoReadyListener {
+        void onFirstVideoReady();
+    }
+
+    private OnVideoReadyListener videoReadyListener;
+    private boolean hasNotifiedFirstVideoReady = false;
+
+    public void setOnVideoReadyListener(OnVideoReadyListener listener) {
+        this.videoReadyListener = listener;
+    }
+
     private OnInteractionListener interactionListener;
 
     // 设置交互事件监听器
@@ -292,6 +304,18 @@ public class VideoPlayerPagerAdapter extends RecyclerView.Adapter<VideoPlayerPag
     }
 
     /**
+     * 通知第一个视频已准备好（仅通知一次）
+     * 用于淡出封面占位图，实现平滑转场
+     */
+    private void notifyFirstVideoReady() {
+        if (!hasNotifiedFirstVideoReady && videoReadyListener != null) {
+            hasNotifiedFirstVideoReady = true;
+            videoReadyListener.onFirstVideoReady();
+            android.util.Log.e(TAG, "首个视频准备完成，通知淡出封面");
+        }
+    }
+
+    /**
      * 获取指定位置的 ViewHolder 
      */
     public VideoPlayerViewHolder getViewHolder(int position) {
@@ -364,6 +388,8 @@ public class VideoPlayerPagerAdapter extends RecyclerView.Adapter<VideoPlayerPag
                             p.play();
                             h.ivPlayIcon.setVisibility(View.GONE);
                         }
+                        // 通知第一个视频已准备好（用于淡出封面占位图）
+                        notifyFirstVideoReady();
                     }
                 }
             }
