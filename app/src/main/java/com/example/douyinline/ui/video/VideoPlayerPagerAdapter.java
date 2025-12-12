@@ -278,7 +278,32 @@ public class VideoPlayerPagerAdapter extends RecyclerView.Adapter<VideoPlayerPag
         
         // 放大 + 淡出动画
         heart.setScaleX(0f);
-        heart.setScaleY(0f);
+        heart.setScaleY(0f);private void showLikeAnimation(VideoPlayerViewHolder holder, float x, float y) {
+            // 创建一个心形图标并显示动画
+            ImageView heart = new ImageView(context);
+            heart.setImageResource(R.drawable.ic_like_fill);
+            heart.setColorFilter(android.graphics.Color.parseColor("#FF4081"));
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(200, 200);
+            params.leftMargin = (int) x - params.width/2;
+            params.topMargin = (int) y - params.height/2;
+
+            ViewGroup parent = (ViewGroup) holder.playerView.getParent();
+            parent.addView(heart, params);
+
+            // 放大 + 淡出动画
+            heart.setScaleX(0f);
+            heart.setScaleY(0f);
+            heart.setAlpha(1f);
+
+            heart.animate()
+                    .scaleX(1.5f)
+                    .scaleY(1.5f)
+                    .alpha(0f)
+                    .setDuration(500)
+                    .withEndAction(() -> parent.removeView(heart))
+                    .start();
+        }
         heart.setAlpha(1f);
         
         heart.animate()

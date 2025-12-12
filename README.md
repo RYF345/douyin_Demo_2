@@ -17,7 +17,7 @@
 
 ---
 
-## ✨ 功能特性
+## 功能特性
 - **全屏沉浸式播放** - 支持垂直滑动切换视频，沉浸式观看体验
 - **双列瀑布流推荐** - 首页采用瀑布流布局展示视频封面
 - **社交互动** - 支持点赞、收藏、评论交互功能
@@ -122,8 +122,7 @@ app/src/main/java/com/example/douyinline/
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/douyinline.git
-cd douyinline
+git clone https://github.com/RYF345/douyin_Demo_2.git
 ```
 
 ### 2. 打开项目
@@ -180,6 +179,33 @@ vpFullVideo.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 ### 双击点赞动画
 
 ```java
+private void showLikeAnimation(VideoPlayerViewHolder holder, float x, float y) {
+        // 创建一个心形图标并显示动画
+        ImageView heart = new ImageView(context);
+        heart.setImageResource(R.drawable.ic_like_fill);
+        heart.setColorFilter(android.graphics.Color.parseColor("#FF4081"));
+        
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(200, 200);
+        params.leftMargin = (int) x - params.width/2;
+        params.topMargin = (int) y - params.height/2;
+        
+        ViewGroup parent = (ViewGroup) holder.playerView.getParent();
+        parent.addView(heart, params);
+        
+        // 放大 + 淡出动画
+        heart.setScaleX(0f);
+        heart.setScaleY(0f);
+        heart.setAlpha(1f);
+        
+        heart.animate()
+            .scaleX(1.5f)
+            .scaleY(1.5f)
+            .alpha(0f)
+            .setDuration(500)
+            .withEndAction(() -> parent.removeView(heart))
+            .start();
+    }
+
 GestureDetector gestureDetector = new GestureDetector(context, 
     new GestureDetector.SimpleOnGestureListener() {
         @Override
@@ -226,7 +252,6 @@ dependencies {
 ---
 
 ## 功能概览
-
 - 首页双列瀑布流推荐
 - 全屏沉浸式视频播放
 - 垂直滑动切换视频
@@ -234,6 +259,5 @@ dependencies {
 - 评论底部弹窗
 - 下拉刷新 / 加载更多
 - 双击点赞动画
-- 页面转场优化
-
+- 页面转场动画
 ---
