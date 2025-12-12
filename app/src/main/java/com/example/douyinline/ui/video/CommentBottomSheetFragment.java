@@ -162,7 +162,7 @@ public class CommentBottomSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(!isLoading && dy > 0){
+                if(!isLoading && dy > 0 && hasMore){
                     LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     if (layoutManager != null) {
                         int visibleItemCount = layoutManager.getChildCount();
@@ -191,6 +191,11 @@ public class CommentBottomSheetFragment extends BottomSheetDialogFragment {
                 progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
                 // 根据ViewModel的加载状态来同步Fragment的isLoading标志
                 this.isLoading = loading;
+            }
+        });
+        commentViewModel.getHasMore().observe(this, hasMore -> {
+            if (hasMore != null) {
+                this.hasMore = hasMore;
             }
         });
     }

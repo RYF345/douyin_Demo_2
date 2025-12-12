@@ -13,12 +13,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+/**
+ * 评论 ViewModel
+ * 1. 管理评论列表数据
+ * 2. 管理评论加载状态
+ * 3. 处理评论加载逻辑
+ * 4. 处理评论发送逻辑
+ */
 public class CommentViewModel extends ViewModel {
     private final MutableLiveData<List<CommentBean>> commentListLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> hasMoreLiveData = new MutableLiveData<>(false);  // 改为 LiveData
     private VideoBean video;
     private final int ADD_COMMENT_COUNT = 10;
-    private boolean hasMore = false;
     private int hasLoaded = 0;  // 已加载的评论数量
     private MutableLiveData<Integer> commentCountToTal = new MutableLiveData<>(0);
 
@@ -52,7 +59,14 @@ public class CommentViewModel extends ViewModel {
     public MutableLiveData<Integer> getCurrentVideoPosition() {
         return currentVideoPosition;
     }
-
+    
+    /**
+     * 是否还有更多评论
+     * @return 是否还有更多评论的 LiveData
+     */
+    public MutableLiveData<Boolean> getHasMore() {
+        return hasMoreLiveData;  // 返回同一个实例
+    }
     /**
      * 首次加载数据
      */
@@ -64,19 +78,20 @@ public class CommentViewModel extends ViewModel {
         getCommentCountToTal().setValue(video.getCommentCount());
         int shouldLoadCount = video.getCommentCount() - hasLoaded;
         if (shouldLoadCount <= 0) {
-            hasMore = false;
+            hasMoreLiveData.setValue(false);
             return;
         }
         
         isLoading.setValue(true);
-        hasMore = true;
         // 加载评论
         List<CommentBean> comments = generateComments(shouldLoadCount);
         hasLoaded += comments.size();
         currentComments.addAll(comments);
-        if(hasLoaded >= video.getCommentCount()) {
-            hasMore = false;
-        }
+        
+        // 判断是否还有更多数据
+        boolean stillHasMore = hasLoaded < video.getCommentCount();
+        hasMoreLiveData.setValue(stillHasMore);
+        
         commentListLiveData.setValue(currentComments);
         isLoading.setValue(false);
     }
@@ -84,7 +99,10 @@ public class CommentViewModel extends ViewModel {
      * 加载更多数据
      */
     public void loadMoreComments() {
-        if (!hasMore) {return;}
+        // 检查是否还有更多数据
+        if (!Boolean.TRUE.equals(hasMoreLiveData.getValue())) {
+            return;
+        }
         if (Boolean.TRUE.equals(isLoading.getValue())) {return;}
         isLoading.setValue(true);
         
@@ -95,9 +113,11 @@ public class CommentViewModel extends ViewModel {
             List<CommentBean> comments = generateComments(shouldLoadCount);
             hasLoaded += comments.size();
             currentComments.addAll(comments);
-            if(hasLoaded >= video.getCommentCount()) {
-                hasMore = false;
-            }
+            
+            // 判断是否还有更多数据
+            boolean stillHasMore = hasLoaded < video.getCommentCount();
+            hasMoreLiveData.setValue(stillHasMore);
+            
             commentListLiveData.setValue(currentComments);
             isLoading.setValue(false);
         }, 500);
@@ -111,7 +131,7 @@ public class CommentViewModel extends ViewModel {
         // 重置评论状态，防止不同视频共享同一份评论数据
         this.currentComments.clear();
         this.hasLoaded = 0;
-        this.hasMore = false;
+        this.hasMoreLiveData.setValue(true);  // 重置为 true，允许加载
         this.commentListLiveData.setValue(new ArrayList<>());
     }
 

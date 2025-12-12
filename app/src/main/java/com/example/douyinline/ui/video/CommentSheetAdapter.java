@@ -15,6 +15,11 @@ import com.example.douyinline.bean.CommentBean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 评论列表适配器
+ * 1. 刷新数据
+ * 2. 添加单条数据
+ */
 public class CommentSheetAdapter extends RecyclerView.Adapter<CommentSheetAdapter.CommentViewHolder> {
     private List<CommentBean> commentsList;
 

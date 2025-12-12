@@ -24,12 +24,11 @@ import java.util.List;
 
 /**
  * 全屏沉浸式视频播放页面
- * 
  * 核心流程：
  * 1. 初始化 PlayerPool（预创建播放器实例）
  * 2. 初始化 ViewPager2 和 Adapter
  * 3. 通过 OnPageChangeCallback 控制当前播放的视频
- * 4. 生命周期管理：onPause 暂停，onResume 恢复
+ * 4. 生命周期管理：onPause 暂停，onResume 恢复 (AI实现)
  */
 public class VideoPlayActivity extends AppCompatActivity {
     private static final String TAG = "VideoPlayActivity";

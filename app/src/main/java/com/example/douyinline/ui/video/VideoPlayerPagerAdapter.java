@@ -36,9 +36,8 @@ import java.util.Map;
  * 
  * 核心逻辑（延迟加载策略）：
  * 1. onBindViewHolder: 只绑定 UI 数据，不准备播放器
- * 2. playAt: 外部调用，只为当前播放位置准备播放器并播放
- * 3. 切换页面时，释放旧播放器，为新页面准备播放器
- * 
+ * 2. playAt: 外部调用，只为当前播放位置准备播放器并播放 (AI实现)
+ * 3. prepareAndPlay 等：切换页面时，释放旧播放器，为新页面准备播放器 (AI实现)
  * 这样可以避免同时准备多个 4K 视频导致 MediaCodec 资源不足
  */
 public class VideoPlayerPagerAdapter extends RecyclerView.Adapter<VideoPlayerPagerAdapter.VideoPlayerViewHolder> {
@@ -270,7 +269,7 @@ public class VideoPlayerPagerAdapter extends RecyclerView.Adapter<VideoPlayerPag
         heart.setImageResource(R.drawable.ic_like_fill);
         heart.setColorFilter(android.graphics.Color.parseColor("#FF4081"));
         
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(150, 150);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(200, 200);
         params.leftMargin = (int) x - params.width/2;
         params.topMargin = (int) y - params.height/2;
         
